@@ -16,11 +16,11 @@ void	fds_pipes(int in, int out, t_inf *info)
 {
 	if (dup2(in, STDIN_FILENO) == -1)
 	{
-		free_memory("Dup2",": ",strerror(errno), info);
+		free_error("Dup2", ": ", strerror(errno), info);
 	}
-	if(dup2(out, STDOUT_FILENO) == -1)
+	if (dup2(out, STDOUT_FILENO) == -1)
 	{
-		free_memory("Dup2",": ",strerror(errno), info);
+		free_error("Dup2", ": ", strerror(errno), info);
 	}
 }
 
@@ -45,10 +45,10 @@ void	set_fds_pipes(t_inf *info)
 	i = -1;
 	info->fds = malloc(sizeof(info->fds) * 2 * (info->n_cmd - 1));
 	if (info->fds == NULL)
-		free_memory("error malloc files descriptors pipes","","", info);
+		free_error("error malloc files descriptors pipes", "", "", info);
 	while (++i < (info->n_cmd - 1))
 	{
 		if (pipe(info->fds + 2 * i) == -1)
-			free_memory("error create pipes","","", info);
+			free_error("error create pipes", "", "", info);
 	}
 }

@@ -17,10 +17,15 @@ void	see_leaks()
 	system("leaks pipex");
 }
 
-int wait_childs(t_inf *info){
-	int espera;
-	int status;
-	int exit_cod;
+/** wait_childs:
+ * This function .................
+ *
+ */
+int	wait_childs(t_inf *info)
+{
+	int	espera;
+	int	status;
+	int	exit_cod;
 
 	status = 1;
 	info->child--;
@@ -31,27 +36,16 @@ int wait_childs(t_inf *info){
 	close_pipes(info);
 	while (info->child >= 0)
 	{
-		//TODO Analiar el siguiente codigo
 		espera = waitpid(info->pid[info->child], &status, 0);
-		
 		if (espera == info->pid[info->n_cmd - 1])
 		{
 			if ((info->child == (info->n_cmd - 1)) && WIFEXITED(status))
 				exit_cod = WEXITSTATUS(status);
 		}
 		info->child--;
+		
 	}
-	//TODO free de todo
-		if (info->paths != NULL)
-		clean_paths(info);
-	if (!info->pid)
-		free(info->pid);
-	if (!info->fds)
-		free(info->fds);
-	close(info->in_file);
-	close(info->out_file);
-	
-
+	free_memory(info);
 	return (exit_cod);
 }
 
@@ -64,18 +58,18 @@ int	main(int argc, char **argv, char **env)
 	t_inf	info;
 	char	*temp;
 
+	
 	info.env = env;
 	info.argc = argc;
 	info.argv = argv;
 	info.child = -1;
 	if (validate_arg(&info) == -1)
 		exit (EXIT_FAILURE);
-	
 	while (++info.child < info.n_cmd)
 	{
 		info.pid[info.child] = fork();
 		if (info.pid[info.child] == -1)
-			free_memory("fork", ": ", strerror(errno), &info);
+			free_error("fork", ": ", strerror(errno), &info);
 		else if (info.pid[info.child] == 0)
 		{
 			temp = get_cmd(&info, info.child);
@@ -84,4 +78,3 @@ int	main(int argc, char **argv, char **env)
 	}
 	return (wait_childs(&info));
 }
-

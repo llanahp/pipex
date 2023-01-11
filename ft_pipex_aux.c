@@ -46,7 +46,7 @@ int	validate_arg(t_inf *info)
 	set_fds_pipes(info);
 	info->pid = malloc(sizeof(info->pid) * info->n_cmd);
 	if (info->pid == NULL)
-		free_memory("Error malloc pids", "", "", info);
+		free_error("Error malloc pids", "", "", info);
 	return (1);
 }
 
@@ -84,7 +84,5 @@ char	*get_cmd(t_inf *info, int numberChild)
 		free(cmd2);
 		cmd2 = NULL;
 	}
-	if (cmd2 == NULL)
-		msg("command not found", ": ", info->argv[numberChild + 2], -1);
 	return (cmd2);
 }

@@ -50,19 +50,19 @@ int	read_temp(t_inf *info)
  * the string passed as the second argument is enterd.
  * 
  * If somethig went wrong opening "here\doc" file,
- * 	calls free_memory and ends the program.
+ * 	calls free_error and ends the program.
  */
 void	open_input(t_inf *info)
 {
 	if (ft_strcmp((*info).argv[1], "here\\_doc") == 0)
 		if (read_temp(info) == -1)
-			free_memory("here\\doc:", ": ", strerror(errno), info);
+			free_error("here\\doc:", ": ", strerror(errno), info);
 	info->in_file = open (info->argv[1], O_RDONLY, 644);
 	if (info->in_file < 0)
 	{
 		if (ft_strcmp(info->argv[1], ".here\\_doc") == 0)
-			free_memory("here\\doc:", ": ", strerror(errno), info);
-		msg(strerror(errno), ": ", info->argv[1],1);
+			free_error("here\\doc:", ": ", strerror(errno), info);
+		msg(strerror(errno), ": ", info->argv[1], 1);
 	}
 }
 

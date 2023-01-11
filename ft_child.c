@@ -24,7 +24,6 @@ void	pipes_child(t_inf *info, int num)
 		fds_pipes(info->fds[2 * num - 2], info->out_file, info);
 	else
 		fds_pipes(info->fds[2 * num - 2], info->fds[2 * num + 1], info);
-
 	if (info->in_file != -1)
 		close(info->in_file);
 	if (info->out_file != -1)
@@ -38,22 +37,24 @@ void	pipes_child(t_inf *info, int num)
 */
 void	child(t_inf *info, char *cmd)
 {
+	int	argu;
+
+	argu = info->child + 2;
 	pipes_child(info, info->child);
 	//TODO revisar este aparatado
-	
 	if (info->args_cmd == NULL || cmd == NULL)
 	{
 		if (cmd == NULL)
-			free_memory("command not found" ,": " ,info->argv[info->child + 2] , info);
+			free_error("command not found", ": ", info->argv[argu], info);
 		if (cmd != NULL)
 			free(cmd);
-		free_memory("" ,"" ,"" , info);
+		free_error("", "", "", info);
 	}
 	if (execve(cmd, info->args_cmd, info->env) == -1)
 	{
 		if (cmd != NULL)
 			free(cmd);
-		free_memory("Execve", ": ", strerror(errno), info);
+		free_error("Execve", ": ", strerror(errno), info);
 	}
 	if (cmd != NULL)
 		free(cmd);

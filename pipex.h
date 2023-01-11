@@ -59,5 +59,6 @@ int		msg(char *str1, char *str2, char *str3, int code);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putstr_fd(char *s, int fd);
-void	free_memory(char *str1,char *str2, char *str3, t_inf *info);
+void	free_error(char *str1,char *str2, char *str3, t_inf *info);
+void	free_memory(t_inf *info);
 #endif
