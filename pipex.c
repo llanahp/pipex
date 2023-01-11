@@ -50,11 +50,15 @@ int wait_childs(t_inf *info){
 		free(info->fds);
 	close(info->in_file);
 	close(info->out_file);
-	status = exit_cod;
+	
 
-	return (status);
+	return (exit_cod);
 }
 
+/* main:
+*	Creates the principal structure tu store info, t_info.
+*	Returns the last child's exit code.
+*/
 int	main(int argc, char **argv, char **env)
 {
 	t_inf	info;
@@ -66,9 +70,6 @@ int	main(int argc, char **argv, char **env)
 	info.child = -1;
 	if (validate_arg(&info) == -1)
 		exit (EXIT_FAILURE);
-	info.pid = malloc(sizeof * info.pid * info.n_cmd);
-	if (info.pid == NULL)
-		return (msg("Malloc", ": ", strerror(errno), -1));
 	while (++info.child < info.n_cmd)
 	{
 		info.pid[info.child] = fork();

@@ -13,7 +13,9 @@
 #include "pipex.h"
 
 
-
+/** set_num_cmd:
+ * This function strore the number of commands need to be executed.
+ */
 void	set_num_cmd(t_inf	*info)
 {
 	if (ft_strcmp(info->argv[1], "here\\_doc") == 0)
@@ -25,6 +27,7 @@ void	set_num_cmd(t_inf	*info)
 /** validate_arg:
  * This function verify all the pre-requisites to necesary to start executing 
  * the commands are correct.
+ * Malloc space to store the numbers of the forks.
  * 
  * Returns 1 if all the validations are success
  * 
@@ -38,14 +41,13 @@ int	validate_arg(t_inf *info)
 		return (msg("Number of arguments invalid", "", "", -1));
 	if (validate_env(info) == -1)
 		return (-1);
-	if (open_input(info) == -1)
-		return (-1);
-	if (open_output(info) == -1)
-		return (-1);
-	//TODO mandar a otra funcion
+	open_input(info);
+	open_output(info);
 	set_num_cmd(info);
-	if (set_fds_pipes(info) == -1)
-		return (-1);
+	set_fds_pipes(info);
+	info->pid = malloc(sizeof(info->pid) * info->n_cmd);
+	if (info->pid == NULL)
+		free_memory("Error malloc pids", "", "", info);
 	return (1);
 }
 
@@ -61,7 +63,6 @@ char	*get_cmd(t_inf *info, int numberChild)
 	cmd = (*info).argv[numberChild + 2];
 	if (access(cmd, 0) == 0)
 		return (cmd);
-
 	info->args_cmd =  ft_split_upgrade(cmd, ' ');
 	while (info->paths[++i] != NULL)
 	{

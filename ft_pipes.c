@@ -36,22 +36,20 @@ void	close_pipes(t_inf *info)
 	}
 }
 
-int	set_fds_pipes(t_inf *info)
+/** set_num_cmd:
+ * This function malloc space to store the Files Descriptors (fd) of the pipes
+ */
+void	set_fds_pipes(t_inf *info)
 {
 	int	i;
 
 	i = -1;
-	//info->fds = malloc(sizeof(int *) * 2 * info->n_cmd);
-	info->fds = malloc(sizeof * info->fds * 2 * (info->n_cmd - 1));
+	info->fds = malloc(sizeof(info->fds) * 2 * (info->n_cmd - 1));
 	if (info->fds == NULL)
-		return (msg("error malloc files descriptors pipes","","", -1));
+		free_memory("error malloc files descriptors pipes","","", info);
 	while (++i < (info->n_cmd - 1))
 	{
 		if (pipe(info->fds + 2 * i) == -1)
-		{
-			free(info->fds);
-				return (msg("error create pipes","","", -1));
-		}
+			free_memory("error create pipes","","", info);
 	}
-	return (0);
 }

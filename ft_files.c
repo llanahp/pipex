@@ -49,29 +49,27 @@ int	read_temp(t_inf *info)
  * If the first argument is "here\doc", it reads from terminal until 
  * the string passed as the second argument is enterd.
  * 
- * Returns 0 
- * 
- * Returns -1 if something goes wrong
+ * If somethig went wrong opening "here\doc" file,
+ * 	calls free_memory and ends the program.
  */
-int	open_input(t_inf *info)
+void	open_input(t_inf *info)
 {
 	if (ft_strcmp((*info).argv[1], "here\\_doc") == 0)
 		if (read_temp(info) == -1)
-			return (-1);
+			free_memory("here\\doc:", ": ", strerror(errno), info);
 	info->in_file = open (info->argv[1], O_RDONLY, 644);
 	if (info->in_file < 0)
 	{
-		if (ft_strcmp(info->argv[1], ".here\\_doc") == 0){
-			unlink(".here\\_doc");
-			msg("here\\doc:", "", strerror(errno), 1);
-			exit(1);
-		}
-		return (msg(strerror(errno), ": ", info->argv[1],1));
+		if (ft_strcmp(info->argv[1], ".here\\_doc") == 0)
+			free_memory("here\\doc:", ": ", strerror(errno), info);
+		msg(strerror(errno), ": ", info->argv[1],1);
 	}
-	return (0);
 }
 
-int	open_output(t_inf *info)
+/** open_output:
+ * This function opens the file that is going to be use as an output.
+ */
+void	open_output(t_inf *info)
 {
 	char	*fd;
 
@@ -81,6 +79,5 @@ int	open_output(t_inf *info)
 	else
 		info->out_file = open(fd, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (info->out_file < 0)
-		return (msg(strerror(errno), ": ", info->argv[info->argc - 1], -1));
-	return (0);
+		msg(strerror(errno), ": ", info->argv[info->argc - 1], 1);
 }
