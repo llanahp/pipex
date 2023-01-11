@@ -42,7 +42,7 @@ typedef struct s_inf
 
 int		main(int argc, char **argv, char **env);
 char	**ft_split_upgrade(char const *s, char c);
-int		get_env(char **env, t_inf *info);
+int		get_enviroment(char **env, t_inf *info);
 void	set_num_cmd(t_inf	*info);
 int		validate_arg(t_inf *info);
 char	*get_cmd(t_inf *info, int n);
@@ -59,4 +59,5 @@ int		msg(char *str1, char *str2, char *str3, int code);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putstr_fd(char *s, int fd);
+
 #endif

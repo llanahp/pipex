@@ -12,7 +12,17 @@
 
 #include "pipex.h"
 
-int	get_env(char **env, t_inf *info)
+/** get_enviroment:
+ * This function is called after verify that enviroment exist
+ * Iterates all enviroment string to since find the string "PATH=" 
+ * or reach the end
+ * 
+ * Returns 1 if string "PATH=" is find and store the rest of the string 
+ * in info.paths splited by character ':'.
+ * 
+ * Returns -1 enviroment dosen´t containst "PATH=".
+ */
+int	get_enviroment(char **env, t_inf *info)
 {
 	int		i;
 	char	*temp;
@@ -32,6 +42,16 @@ int	get_env(char **env, t_inf *info)
 	}
 }
 
+/** get_enviroment:
+ * This function is called after verify that enviroment exist
+ * Iterates all enviroment string to since find the string "PATH=" 
+ * or reach the end
+ * 
+ * Returns 1 if string "PATH=" is find and store the rest of the string 
+ * in info.paths splited by character ':'
+ * 
+ * Returns -1 enviroment dosen´t containst "PATH="
+ */
 void	clean_paths(t_inf *info)
 {
 	int	i;
@@ -42,9 +62,16 @@ void	clean_paths(t_inf *info)
 	free(info->paths);
 }
 
+/** validate_env:
+ * This function verify if the enviroment of the program is null
+ * 
+ * Returns, if enviroment exist, the value of function get_env
+ * 
+ * Returns -1 if something goes wrong
+ */
 int	validate_env(t_inf *info)
 {
 	if (!info->env || info->env[0][0] == '\0')
-		return (msg("Unexpected error.","","", -1));
-	return (get_env(info->env, info));
+		return (msg("Enviroment is null", "", "", -1));
+	return (get_enviroment(info->env, info));
 }

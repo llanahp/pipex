@@ -12,20 +12,27 @@
 
 #include "pipex.h"
 
+/** read_temp:
+ * This function stores the input from terminal into the ".heredoc" file.
+ * 
+ * Returns 0 if everything finishes correctly
+ * 
+ * Returns 1 if something goes wrong
+ */
 int	read_temp(t_inf *info)
 {
 	char	*buf;
 
 	info->in_file = open(".here\\_doc", O_CREAT | O_WRONLY | O_TRUNC, 0000644);
 	if (info->in_file < 0)
-		return (msg("here\\doc:","",strerror(errno), 1));
+		return (msg("here\\doc", ": ", strerror(errno), -1));
 	while (1 == 1)
 	{
 		buf = NULL;
 		write(1, "heredoc> ", 9);
 		buf = get_next_line(0);
 		if (buf == NULL)
-			exit(1);
+			return (msg("Error reading", ": ", strerror(errno), -1));
 		if (ft_strcmp(buf, info->argv[2]) == 0)
 			break ;
 		write(info->in_file, &buf, ft_strlen(buf));
@@ -37,10 +44,20 @@ int	read_temp(t_inf *info)
 	return (0);
 }
 
+/** open_input:
+ * This function opens the file that is going to be use as an input.
+ * If the first argument is "here\doc", it reads from terminal until 
+ * the string passed as the second argument is enterd.
+ * 
+ * Returns 0 
+ * 
+ * Returns -1 if something goes wrong
+ */
 int	open_input(t_inf *info)
 {
 	if (ft_strcmp((*info).argv[1], "here\\_doc") == 0)
-		read_temp(info);
+		if (read_temp(info) == -1)
+			return (-1);
 	info->in_file = open (info->argv[1], O_RDONLY, 644);
 	if (info->in_file < 0)
 	{

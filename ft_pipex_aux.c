@@ -12,6 +12,8 @@
 
 #include "pipex.h"
 
+
+
 void	set_num_cmd(t_inf	*info)
 {
 	if (ft_strcmp(info->argv[1], "here\\_doc") == 0)
@@ -20,6 +22,14 @@ void	set_num_cmd(t_inf	*info)
 		info->n_cmd = info->argc - 3;
 }
 
+/** validate_arg:
+ * This function verify all the pre-requisites to necesary to start executing 
+ * the commands are correct.
+ * 
+ * Returns 1 if all the validations are success
+ * 
+ * Returns -1 if any validation went wrong
+ */
 int	validate_arg(t_inf *info)
 {
 	if (info->argc < 5)
@@ -32,6 +42,7 @@ int	validate_arg(t_inf *info)
 		return (-1);
 	if (open_output(info) == -1)
 		return (-1);
+	//TODO mandar a otra funcion
 	set_num_cmd(info);
 	if (set_fds_pipes(info) == -1)
 		return (-1);

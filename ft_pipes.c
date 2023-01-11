@@ -29,11 +29,10 @@ void	close_pipes(t_inf *info)
 {
 	int	i;
 
-	i = 0;
-	while (i < (2 * (info->n_cmd - 1)))
+	i = -1;
+	while (++i < (2 * (info->n_cmd - 1)))
 	{
 		close(info->fds[i]);
-		i++;
 	}
 }
 
