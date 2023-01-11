@@ -79,9 +79,7 @@ int	main(int argc, char **argv, char **env)
 		else if (info.pid[info.child] == 0)
 		{
 			temp = get_cmd(&info, info.child);
-			// ! TODO me he quedado por este punto
-			if (child(&info, temp) == -1)
-				exit (EXIT_FAILURE);
+			child(&info, temp);
 		}
 	}
 	return (wait_childs(&info));

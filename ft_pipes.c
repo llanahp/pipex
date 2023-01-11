@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-void	fds_pipes(int in, int out, t_info *info)
+void	fds_pipes(int in, int out, t_inf *info)
 {
 	if (dup2(in, STDIN_FILENO) == -1)
 	{
@@ -22,7 +22,6 @@ void	fds_pipes(int in, int out, t_info *info)
 	{
 		free_memory("Dup2",": ",strerror(errno), info);
 	}
-	return (0);
 }
 
 void	close_pipes(t_inf *info)

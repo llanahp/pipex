@@ -13,7 +13,8 @@
 #include "pipex.h"
 
 /* pipes_child:
-*	
+* Depend of the number of child, dups input and output to the corresponded ones
+* and close the Files Descriptors (FD)
 */
 void	pipes_child(t_inf *info, int num)
 {
@@ -32,17 +33,28 @@ void	pipes_child(t_inf *info, int num)
 }
 
 /** child:
- * 
- * 
+ * This function is called by the child of the fork
+ * Dup and close the pipes and execute the command
 */
-int	child(t_inf *info, char *cmd)
+void	child(t_inf *info, char *cmd)
 {
-	pipes_child(info, (*info).child);
+	pipes_child(info, info->child);
+	//TODO revisar este aparatado
+	
 	if (info->args_cmd == NULL || cmd == NULL)
-		exit(1);
+	{
+		if (cmd == NULL)
+			free_memory("command not found" ,": " ,info->argv[info->child + 2] , info);
+		if (cmd != NULL)
+			free(cmd);
+		free_memory("" ,"" ,"" , info);
+	}
 	if (execve(cmd, info->args_cmd, info->env) == -1)
-		return (msg("Execve", ": ", strerror(errno), -1));
+	{
+		if (cmd != NULL)
+			free(cmd);
+		free_memory("Execve", ": ", strerror(errno), info);
+	}
 	if (cmd != NULL)
 		free(cmd);
-	return (0);
 }
