@@ -70,17 +70,20 @@ int	main(int argc, char **argv, char **env)
 	info.child = -1;
 	if (validate_arg(&info) == -1)
 		exit (EXIT_FAILURE);
+	
 	while (++info.child < info.n_cmd)
 	{
 		info.pid[info.child] = fork();
 		if (info.pid[info.child] == -1)
-			return (msg("Pipe", ": ", strerror(errno), -1));
+			free_memory("fork", ": ", strerror(errno), &info);
 		else if (info.pid[info.child] == 0)
 		{
 			temp = get_cmd(&info, info.child);
+			// ! TODO me he quedado por este punto
 			if (child(&info, temp) == -1)
 				exit (EXIT_FAILURE);
 		}
 	}
 	return (wait_childs(&info));
 }
+

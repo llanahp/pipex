@@ -12,7 +12,6 @@
 
 #include "pipex.h"
 
-
 /** set_num_cmd:
  * This function strore the number of commands need to be executed.
  */
@@ -51,32 +50,41 @@ int	validate_arg(t_inf *info)
 	return (1);
 }
 
+/** get_cmd:
+ * This function returns, if exists and it can be access,
+ *  the absolute path to the command.
+ * First try whith the command because it can be the abslute path.
+ * If they cant access, they try all the path from the enviroment.
+ * 
+ * Returns !(NULL) if all the validations are success
+ * 
+ * Returns NULL if any validation went wrong
+ */
 char	*get_cmd(t_inf *info, int numberChild)
 {
 	char	*cmd;
 	char	*cmd2;
 	int		i;
+	int		len;
 
 	i = -1;
-	if (numberChild > (*info).n_cmd)
+	if (numberChild > info->n_cmd)
 		return (NULL);
-	cmd = (*info).argv[numberChild + 2];
-	if (access(cmd, 0) == 0)
+	cmd = info->argv[numberChild + 2];
+	if (access(cmd, F_OK | X_OK) == 0)
 		return (cmd);
-	info->args_cmd =  ft_split_upgrade(cmd, ' ');
+	info->args_cmd = ft_split_upgrade(cmd, ' ');
 	while (info->paths[++i] != NULL)
 	{
 		cmd2 = ft_strjoin(info->paths[i], "/");
-		cmd2 = ft_strjoin(cmd2, ft_substr(cmd, 0, ft_strlen(cmd) - ft_strlen(ft_strchr(cmd, ' '))));
+		len = ft_strlen(ft_strchr(cmd, ' '));
+		cmd2 = ft_strjoin(cmd2, ft_substr(cmd, 0, ft_strlen(cmd) - len));
 		if (access(cmd2, F_OK | X_OK) == 0)
 			break ;
 		free(cmd2);
 		cmd2 = NULL;
 	}
 	if (cmd2 == NULL)
-	{
-		msg("command not found", "", "", -1);
-		return (NULL);
-	}
+		msg("command not found", ": ", info->argv[numberChild + 2], -1);
 	return (cmd2);
 }

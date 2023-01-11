@@ -51,7 +51,7 @@ void	open_input(t_inf *info);
 void	open_output(t_inf *info);
 int		child(t_inf *info, char *cmd);
 void	close_pipes(t_inf *info);
-int		fds_pipes(int in, int out);
+void	fds_pipes(int in, int out,t_info *info);
 void	set_fds_pipes(t_inf *info);
 char	*get_next_line(int fd);
 void	clean_paths(t_inf *info);

@@ -12,15 +12,15 @@
 
 #include "pipex.h"
 
-int	fds_pipes(int in, int out)
+void	fds_pipes(int in, int out, t_info *info)
 {
 	if (dup2(in, STDIN_FILENO) == -1)
 	{
-		return (msg("Dup2",": ",strerror(errno), -1));
+		free_memory("Dup2",": ",strerror(errno), info);
 	}
 	if(dup2(out, STDOUT_FILENO) == -1)
 	{
-		return (msg("Dup2",": ",strerror(errno), -1));
+		free_memory("Dup2",": ",strerror(errno), info);
 	}
 	return (0);
 }
