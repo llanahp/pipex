@@ -18,12 +18,18 @@ void	see_leaks()
 }
 
 /** wait_childs:
- * This function .................
- *
+ * This function is called after execute all commands.
+ * Close the input and output file. Also the file descriptors of the pipes.
+ * 
+ * Waits for all the childs and return the last exit code status.
+ * 
+ * If it´s the last child, they store her exit status.
+ * WIFEXITED(status) returns != 0 if the child ends correctly.
+ * WEXITSTATUS(status) returns the output status of last child.
  */
 int	wait_childs(t_inf *info)
 {
-	int	espera;
+	int	id;
 	int	status;
 	int	exit_cod;
 
@@ -36,14 +42,13 @@ int	wait_childs(t_inf *info)
 	close_pipes(info);
 	while (info->child >= 0)
 	{
-		espera = waitpid(info->pid[info->child], &status, 0);
-		if (espera == info->pid[info->n_cmd - 1])
+		id = waitpid(info->pid[info->child], &status, 0);
+		if (id == info->pid[info->n_cmd - 1])
 		{
 			if ((info->child == (info->n_cmd - 1)) && WIFEXITED(status))
 				exit_cod = WEXITSTATUS(status);
 		}
 		info->child--;
-		
 	}
 	free_memory(info);
 	return (exit_cod);
@@ -58,7 +63,6 @@ int	main(int argc, char **argv, char **env)
 	t_inf	info;
 	char	*temp;
 
-	
 	info.env = env;
 	info.argc = argc;
 	info.argv = argv;
@@ -74,6 +78,7 @@ int	main(int argc, char **argv, char **env)
 		{
 			temp = get_cmd(&info, info.child);
 			child(&info, temp);
+			free_arguments_cmd(&info);
 		}
 	}
 	return (wait_childs(&info));

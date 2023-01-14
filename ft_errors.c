@@ -23,6 +23,7 @@ void	free_arguments_cmd(t_inf *info)
 	while (info->args_cmd[++i] != NULL)
 		free(info->args_cmd[i]);
 	free(info->args_cmd);
+	info->args_cmd = NULL;
 }
 
 /** free_error:
@@ -48,9 +49,15 @@ void	free_memory(t_inf *info)
 	if (ft_strcmp(info->argv[1], ".here\\_doc") == 0)
 		unlink(info->argv[1]);
 	if (info->pid != NULL)
+	{
 		free(info->pid);
+		info->pid = NULL;
+	}
 	if (info->fds != NULL)
+	{
 		free(info->fds);
+		info->fds = NULL;
+	}
 	if (info->args_cmd != NULL)
 		free_arguments_cmd(info);
 	if (info->paths != NULL)

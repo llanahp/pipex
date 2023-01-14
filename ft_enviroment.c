@@ -60,6 +60,7 @@ void	clean_paths(t_inf *info)
 	while (info->paths[++i] != NULL)
 		free(info->paths[i]);
 	free(info->paths);
+	info->paths = NULL;
 }
 
 /** validate_env:

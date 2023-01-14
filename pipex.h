@@ -51,7 +51,7 @@ void	open_input(t_inf *info);
 void	open_output(t_inf *info);
 void	child(t_inf *info, char *cmd);
 void	close_pipes(t_inf *info);
-void	fds_pipes(int in, int out,t_inf *info);
+void	fds_pipes(int in, int out, t_inf *info);
 void	set_fds_pipes(t_inf *info);
 char	*get_next_line(int fd);
 void	clean_paths(t_inf *info);
@@ -59,6 +59,7 @@ int		msg(char *str1, char *str2, char *str3, int code);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putstr_fd(char *s, int fd);
-void	free_error(char *str1,char *str2, char *str3, t_inf *info);
+void	free_error(char *str1, char *str2, char *str3, t_inf *info);
 void	free_memory(t_inf *info);
+void	free_arguments_cmd(t_inf *info);
 #endif

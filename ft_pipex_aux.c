@@ -74,6 +74,8 @@ char	*get_cmd(t_inf *info, int numberChild)
 	if (access(cmd, F_OK | X_OK) == 0)
 		return (cmd);
 	info->args_cmd = ft_split_upgrade(cmd, ' ');
+	if (info->args_cmd == NULL)
+		free_error("Unexpected error", "", "", info);
 	while (info->paths[++i] != NULL)
 	{
 		cmd2 = ft_strjoin(info->paths[i], "/");

@@ -42,13 +42,12 @@ void	child(t_inf *info, char *cmd)
 	argu = info->child + 2;
 	pipes_child(info, info->child);
 	//TODO revisar este aparatado
-	if (info->args_cmd == NULL || cmd == NULL)
+	if (cmd == NULL || info->args_cmd == NULL)
 	{
 		if (cmd == NULL)
-			free_error("command not found", ": ", info->argv[argu], info);
-		if (cmd != NULL)
-			free(cmd);
-		free_error("", "", "", info);
+			free_error(info->argv[argu], ": ", "command not found", info);
+		free_memory(info);
+		exit(EXIT_FAILURE);
 	}
 	if (execve(cmd, info->args_cmd, info->env) == -1)
 	{

@@ -62,7 +62,7 @@ void	open_input(t_inf *info)
 	{
 		if (ft_strcmp(info->argv[1], ".here\\_doc") == 0)
 			free_error("here\\doc:", ": ", strerror(errno), info);
-		msg(strerror(errno), ": ", info->argv[1], 1);
+		msg(info->argv[1], ": ", strerror(errno), 1);
 	}
 }
 
