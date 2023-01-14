@@ -12,11 +12,6 @@
 
 #include "pipex.h"
 
-void	see_leaks()
-{
-	system("leaks pipex");
-}
-
 /** wait_childs:
  * This function is called after execute all commands.
  * Close the input and output file. Also the file descriptors of the pipes.
@@ -40,6 +35,7 @@ int	wait_childs(t_inf *info)
 	if (info->out_file != -1)
 		close(info->out_file);
 	close_pipes(info);
+	exit_cod = 1;
 	while (info->child >= 0)
 	{
 		id = waitpid(info->pid[info->child], &status, 0);

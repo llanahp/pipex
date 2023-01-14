@@ -37,6 +37,7 @@ typedef struct s_inf
 	int		out_file;
 	int		n_cmd;
 	int		child;
+	int		heredoc;
 
 }	t_inf;
 

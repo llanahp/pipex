@@ -46,7 +46,7 @@ void	free_error(char *str1, char *str2, char *str3, t_inf *info)
  */
 void	free_memory(t_inf *info)
 {
-	if (ft_strcmp(info->argv[1], ".here\\_doc") == 0)
+	if (info->heredoc == 1)
 		unlink(info->argv[1]);
 	if (info->pid != NULL)
 	{

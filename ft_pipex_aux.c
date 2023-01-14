@@ -17,7 +17,7 @@
  */
 void	set_num_cmd(t_inf	*info)
 {
-	if (ft_strcmp(info->argv[1], "here\\_doc") == 0)
+	if (info->heredoc)
 		info->n_cmd = info->argc - 4;
 	else
 		info->n_cmd = info->argc - 3;
@@ -36,10 +36,13 @@ int	validate_arg(t_inf *info)
 {
 	if (info->argc < 5)
 		return (msg("Number of arguments invalid", "", "", -1));
-	if (info->argc < 6 && ft_strcmp(info->argv[1], "here\\_doc") == 0)
+	if (info->argc < 6 && ft_strcmp(info->argv[1], "here_doc") == 0)
 		return (msg("Number of arguments invalid", "", "", -1));
 	if (validate_env(info) == -1)
 		return (-1);
+	info->heredoc = 0;
+	if (ft_strcmp(info->argv[1], "here_doc") == 0)
+		info->heredoc = 1;
 	open_input(info);
 	open_output(info);
 	set_num_cmd(info);
@@ -48,6 +51,26 @@ int	validate_arg(t_inf *info)
 	if (info->pid == NULL)
 		free_error("Error malloc pids", "", "", info);
 	return (1);
+}
+
+/** create_cmd:
+ * This function create the string with the command to execute
+ * Desalocates the memory that dont use.
+ */
+char	*create_cmd(t_inf *info, int i, char *cmd)
+{
+	int		len;
+	char	*cmd2;
+	char	*res;
+	char	*sub_string;
+
+	cmd2 = ft_strjoin(info->paths[i], "/");
+	len = ft_strlen(ft_strchr(cmd, ' '));
+	sub_string = ft_substr(cmd, 0, ft_strlen(cmd) - len);
+	res = ft_strjoin(cmd2, sub_string);
+	free(cmd2);
+	free(subString);
+	return (res);
 }
 
 /** get_cmd:
@@ -65,12 +88,11 @@ char	*get_cmd(t_inf *info, int numberChild)
 	char	*cmd;
 	char	*cmd2;
 	int		i;
-	int		len;
 
 	i = -1;
 	if (numberChild > info->n_cmd)
 		return (NULL);
-	cmd = info->argv[numberChild + 2];
+	cmd = info->argv[numberChild + 2 + info->heredoc];
 	if (access(cmd, F_OK | X_OK) == 0)
 		return (cmd);
 	info->args_cmd = ft_split_upgrade(cmd, ' ');
@@ -78,9 +100,7 @@ char	*get_cmd(t_inf *info, int numberChild)
 		free_error("Unexpected error", "", "", info);
 	while (info->paths[++i] != NULL)
 	{
-		cmd2 = ft_strjoin(info->paths[i], "/");
-		len = ft_strlen(ft_strchr(cmd, ' '));
-		cmd2 = ft_strjoin(cmd2, ft_substr(cmd, 0, ft_strlen(cmd) - len));
+		cmd2 = create_cmd(info, i, cmd);
 		if (access(cmd2, F_OK | X_OK) == 0)
 			break ;
 		free(cmd2);

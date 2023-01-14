@@ -39,9 +39,8 @@ void	child(t_inf *info, char *cmd)
 {
 	int	argu;
 
-	argu = info->child + 2;
+	argu = info->child + 2 + info->heredoc;
 	pipes_child(info, info->child);
-	//TODO revisar este aparatado
 	if (cmd == NULL || info->args_cmd == NULL)
 	{
 		if (cmd == NULL)

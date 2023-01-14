@@ -23,45 +23,52 @@ int	read_temp(t_inf *info)
 {
 	char	*buf;
 
-	info->in_file = open(".here\\_doc", O_CREAT | O_WRONLY | O_TRUNC, 0000644);
+	info->in_file = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, 0000644);
 	if (info->in_file < 0)
-		return (msg("here\\doc", ": ", strerror(errno), -1));
+		return (msg("here_doc", ": ", strerror(errno), -1));
 	while (1 == 1)
 	{
 		buf = NULL;
-		write(1, "heredoc> ", 9);
+		write(1, "pipe heredoc> ", 14);
 		buf = get_next_line(0);
 		if (buf == NULL)
 			return (msg("Error reading", ": ", strerror(errno), -1));
+		buf[ft_strlen(buf) - 1] = '\0';
 		if (ft_strcmp(buf, info->argv[2]) == 0)
+		{
+			free(buf);
 			break ;
-		write(info->in_file, &buf, ft_strlen(buf));
-		write(info->in_file, "\n", 1);
+		}
+		ft_putstr_fd(buf, info->in_file);
+		ft_putstr_fd("\n", info->in_file);
 		free(buf);
 	}
 	close (info->in_file);
-	info->argv[1] = ".here\\_doc";
+	info->argv[1] = ".heredoc";
 	return (0);
 }
 
 /** open_input:
  * This function opens the file that is going to be use as an input.
- * If the first argument is "here\doc", it reads from terminal until 
+ * If the first argument is "here_doc", it reads from terminal until 
  * the string passed as the second argument is enterd.
  * 
- * If somethig went wrong opening "here\doc" file,
+ * If somethig went wrong opening "here_doc" file,
  * 	calls free_error and ends the program.
  */
 void	open_input(t_inf *info)
 {
-	if (ft_strcmp((*info).argv[1], "here\\_doc") == 0)
+	if (info->heredoc == 1)
 		if (read_temp(info) == -1)
-			free_error("here\\doc:", ": ", strerror(errno), info);
-	info->in_file = open (info->argv[1], O_RDONLY, 644);
+			free_error("here_doc:", ": ", strerror(errno), info);
+	if (info->heredoc == 1)
+		info->in_file = open (".heredoc", O_RDONLY);
+	else
+		info->in_file = open (info->argv[1], O_RDONLY, 644);
 	if (info->in_file < 0)
 	{
-		if (ft_strcmp(info->argv[1], ".here\\_doc") == 0)
-			free_error("here\\doc:", ": ", strerror(errno), info);
+		if (info->heredoc == 1)
+			free_error("here_doc:", ": ", strerror(errno), info);
 		msg(info->argv[1], ": ", strerror(errno), 1);
 	}
 }
@@ -74,7 +81,7 @@ void	open_output(t_inf *info)
 	char	*fd;
 
 	fd = info->argv[info->argc - 1];
-	if (ft_strcmp((*info).argv[1], "here\\_doc") == 0)
+	if (info->heredoc)
 		info->out_file = open(fd, O_CREAT | O_RDWR | O_APPEND, 0644);
 	else
 		info->out_file = open(fd, O_CREAT | O_RDWR | O_TRUNC, 0644);
