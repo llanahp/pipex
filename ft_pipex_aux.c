@@ -69,7 +69,7 @@ char	*create_cmd(t_inf *info, int i, char *cmd)
 	sub_string = ft_substr(cmd, 0, ft_strlen(cmd) - len);
 	res = ft_strjoin(cmd2, sub_string);
 	free(cmd2);
-	free(subString);
+	free(sub_string);
 	return (res);
 }
 
